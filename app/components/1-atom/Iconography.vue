@@ -59,6 +59,11 @@
         <line x1="6" y1="6" x2="18" y2="18" />
       </template>
 
+      <!-- Feather: edit-2 (pencil) -->
+      <template v-else-if="name === 'edit'">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+      </template>
+
       <!-- Feather: loader -->
       <template v-else-if="name === 'loading'">
         <line x1="12" y1="2" x2="12" y2="6" />

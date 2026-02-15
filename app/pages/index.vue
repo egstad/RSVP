@@ -270,6 +270,13 @@
           </button>
           <button
             class="player-btn"
+            @click="stopReading"
+          >
+            <Iconography name="edit" />
+            <span>Edit</span>
+          </button>
+          <button
+            class="player-btn"
             :class="{ 'player-btn--settings-active': playerSettingsOpen }"
             @click="playerSettingsOpen = !playerSettingsOpen"
           >
@@ -637,6 +644,29 @@ function stopReading() {
   currentIndex.value = 0;
   playerSettingsOpen.value = false;
   phase.value = "input";
+
+  // DOM is re-created by v-if — reset GSAP-managed styles once it mounts
+  nextTick(() => {
+    const box = boxRef.value;
+    const letters = logoLettersRef.value;
+    const actionRow = actionRowRef.value;
+    const textarea = textareaRef.value;
+
+    if (box) {
+      gsap.set(box, { width: "var(--rsvp-width)", height: "auto", minHeight: "155px" });
+    }
+    if (letters) {
+      gsap.set(letters, { height: 0, overflow: "hidden" });
+      gsap.set(letters.querySelectorAll(".logo-letter"), { opacity: 0 });
+    }
+    if (actionRow) {
+      gsap.set(actionRow, { opacity: 1, y: 0 });
+    }
+    if (textarea) {
+      gsap.set(textarea, { opacity: 1 });
+      textarea.focus();
+    }
+  });
 }
 
 // ============================================
