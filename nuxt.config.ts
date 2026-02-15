@@ -22,6 +22,21 @@ export default defineNuxtConfig({
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "theme-color", content: "#1e1814" },
+        {
+          property: "og:title",
+          content: "RSVP • Speed reading tool",
+        },
+        {
+          property: "og:description",
+          content:
+            "Paste text or upload a file and read in a steady, word-by-word stream. Built by Design Business Company.",
+        },
+        {
+          property: "og:image",
+          content: "/images/og.png",
+        },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },

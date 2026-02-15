@@ -10,14 +10,14 @@ interface PageSetupOptions {
 export default function PageSetup(options?: PageSetupOptions) {
   const nuxt = useNuxtApp();
 
+  // Set page meta during setup so tags render server-side for crawlers
+  if (options?.seoMeta) {
+    useSeoMeta(pageSEO(options.seoMeta));
+  }
+
   onMounted(() => {
     // Update dimension on refresh
     (nuxt.$dimensions as any).set();
-
-    // Set page meta if seoMeta is provided
-    if (options?.seoMeta) {
-      useSeoMeta(pageSEO(options.seoMeta));
-    }
   });
 
   onUnmounted(() => {

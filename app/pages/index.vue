@@ -1,5 +1,5 @@
 <template>
-  <div class="rsvp-page" :class="{ 'is-ready': introResolved }">
+  <div class="rsvp-page" :class="{ 'is-ready': introResolved, 'is-tabbing': isTabbing }">
     <!-- ============================================ -->
     <!-- INTRO + INPUT (shared DOM — box morphs)      -->
     <!-- ============================================ -->
@@ -136,16 +136,6 @@
                 <Iconography name="arrow" />
               </div>
             </div>
-            <div class="setting-row">
-              <div class="setting-label">Theme</div>
-              <div class="setting-value setting-value--select">
-                <select v-model="themeChoice">
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
-                </select>
-                <Iconography name="arrow" />
-              </div>
-            </div>
           </div>
         </div>
 
@@ -262,16 +252,6 @@
                   <option value="small">Small</option>
                   <option value="medium">Medium</option>
                   <option value="large">Large</option>
-                </select>
-                <Iconography name="arrow" />
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-label">Theme</div>
-              <div class="setting-value setting-value--select">
-                <select v-model="themeChoice">
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
                 </select>
                 <Iconography name="arrow" />
               </div>
@@ -429,9 +409,20 @@ watch(
 // ============================================
 const INTRO_SEEN_KEY = "rsvp-intro-seen";
 
+// Track keyboard-vs-mouse focus
+const isTabbing = ref(false);
+function onTabDown(e: KeyboardEvent) {
+  if (e.key === "Tab") isTabbing.value = true;
+}
+function onMouseDown() {
+  isTabbing.value = false;
+}
+
 onMounted(() => {
   loadFromStorage();
   window.addEventListener("keydown", handleKeydown);
+  window.addEventListener("keydown", onTabDown);
+  window.addEventListener("mousedown", onMouseDown);
 
   if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
     skipIntro();
@@ -814,6 +805,8 @@ watch(playerSettingsOpen, (val) => {
 
 onUnmounted(() => {
   window.removeEventListener("keydown", handleKeydown);
+  window.removeEventListener("keydown", onTabDown);
+  window.removeEventListener("mousedown", onMouseDown);
   if (playbackTimer) clearTimeout(playbackTimer);
   if (hideControlsTimer) clearTimeout(hideControlsTimer);
 });
@@ -950,6 +943,7 @@ onUnmounted(() => {
   padding: 0 16px;
   background: var(--rsvp-button);
   border: none;
+  outline: none;
   color: var(--rsvp-text);
   font-size: 14px;
   letter-spacing: 0.02em;
@@ -1028,7 +1022,7 @@ onUnmounted(() => {
   transition: background-color 150ms ease;
 
   &:hover {
-    background: lighten(#2e281f, 4%);
+    background: var(--rsvp-button);
   }
 }
 
@@ -1041,12 +1035,12 @@ onUnmounted(() => {
     -moz-appearance: textfield;
     background: transparent;
     border: none;
+    outline: none;
     color: var(--rsvp-text-dim);
     font-size: 14px;
     font-family: inherit;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
-    outline: none;
     width: 48px;
     text-align: left;
 
@@ -1076,19 +1070,19 @@ onUnmounted(() => {
   cursor: default;
 
   &:hover {
-    background: lighten(#2e281f, 4%);
+    background: var(--rsvp-button);
   }
 
   select {
     appearance: none;
     background: transparent;
     border: none;
+    outline: none;
     color: var(--rsvp-text-dim);
     font-size: 14px;
     font-family: inherit;
     letter-spacing: 0.02em;
     cursor: pointer;
-    outline: none;
     flex: 1;
     min-width: 0;
   }
@@ -1116,6 +1110,7 @@ onUnmounted(() => {
   padding: 0 16px;
   background: var(--rsvp-button);
   border: none;
+  outline: none;
   color: var(--rsvp-text);
   font-size: 14px;
   letter-spacing: 0.02em;
@@ -1329,6 +1324,7 @@ onUnmounted(() => {
   padding: 0 16px;
   background: var(--rsvp-button);
   border: none;
+  outline: none;
   color: var(--rsvp-text-dim);
   font-size: 14px;
   letter-spacing: 0.02em;
@@ -1359,6 +1355,36 @@ onUnmounted(() => {
       background: darken(#d3ccc1, 6%);
       color: var(--rsvp-button);
     }
+  }
+}
+
+// ============================================
+// Tab-only focus outlines
+// ============================================
+.is-tabbing {
+  .rsvp-textarea:focus {
+    outline: 2px solid var(--rsvp-text-dim);
+    outline-offset: -2px;
+  }
+
+  .action-btn:focus {
+    outline: 2px solid var(--rsvp-text-dim);
+    outline-offset: -2px;
+  }
+
+  .bottom-btn:focus {
+    outline: 2px solid var(--rsvp-text-dim);
+    outline-offset: -2px;
+  }
+
+  .player-btn:focus {
+    outline: 2px solid var(--rsvp-text-dim);
+    outline-offset: -2px;
+  }
+
+  .setting-value:focus-within {
+    outline: 2px solid var(--rsvp-text-dim);
+    outline-offset: -2px;
   }
 }
 </style>
