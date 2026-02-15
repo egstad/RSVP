@@ -309,7 +309,12 @@ import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
 PageSetup({
-  seoMeta: { title: "RSVP Reader" },
+  seoMeta: {
+    title: "RSVP • Speed reading tool",
+    description:
+      "Paste text or upload a file and read in a steady, word-by-word stream. Built by Design Business Company.",
+    image: "/images/og.png",
+  },
 });
 
 definePageMeta({
@@ -517,19 +522,27 @@ function runIntroSequence() {
     ease: "power2.inOut",
   });
 
-  tl.to(textarea, {
-    opacity: 1,
-    duration: 0.4,
-    ease: "power2.out",
-  }, "-=0.2");
+  tl.to(
+    textarea,
+    {
+      opacity: 1,
+      duration: 0.4,
+      ease: "power2.out",
+    },
+    "-=0.2",
+  );
 
   // 5) Action buttons fade in
-  tl.to(actionRow, {
-    opacity: 1,
-    y: 0,
-    duration: 0.4,
-    ease: "power2.out",
-  }, "-=0.2");
+  tl.to(
+    actionRow,
+    {
+      opacity: 1,
+      y: 0,
+      duration: 0.4,
+      ease: "power2.out",
+    },
+    "-=0.2",
+  );
 
   // 6) Mark input as ready, restore responsive width
   tl.call(() => {
@@ -789,7 +802,11 @@ onUnmounted(() => {
   min-height: 100vh;
   background: var(--rsvp-bg);
   color: var(--rsvp-text);
-  font-family: "Metaphor", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Metaphor",
+    system-ui,
+    -apple-system,
+    sans-serif;
   visibility: hidden;
 
   &.is-ready {
@@ -1118,7 +1135,11 @@ onUnmounted(() => {
   &.font-sans {
     .word-display {
       transform: translateY(10%);
-      font-family: "Theinhardt", system-ui, -apple-system, sans-serif;
+      font-family:
+        "Theinhardt",
+        system-ui,
+        -apple-system,
+        sans-serif;
     }
   }
   &.font-serif {
