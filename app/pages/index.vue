@@ -699,6 +699,8 @@ async function handleFileSelect(event: Event) {
     const extension = file.name.split(".").pop()?.toLowerCase();
     if (extension === "pdf") {
       inputText.value = await extractTextFromPDF(file);
+    } else if (extension === "md") {
+      inputText.value = stripMarkdown(await file.text());
     } else {
       inputText.value = await file.text();
     }
@@ -710,6 +712,39 @@ async function handleFileSelect(event: Event) {
     isLoadingFile.value = false;
     if (fileInputRef.value) fileInputRef.value.value = "";
   }
+}
+
+function stripMarkdown(text: string): string {
+  return (
+    text
+      // Remove images ![alt](url)
+      .replace(/!\[.*?\]\(.*?\)/g, "")
+      // Convert links [text](url) to just text
+      .replace(/\[([^\]]*)\]\(.*?\)/g, "$1")
+      // Remove headings # ## ### etc
+      .replace(/^#{1,6}\s+/gm, "")
+      // Remove bold/italic ***text***, **text**, *text*, ___text___, __text__, _text_
+      .replace(/(\*{1,3}|_{1,3})(.+?)\1/g, "$2")
+      // Remove strikethrough ~~text~~
+      .replace(/~~(.+?)~~/g, "$1")
+      // Remove inline code `code`
+      .replace(/`([^`]+)`/g, "$1")
+      // Remove code blocks ```...```
+      .replace(/```[\s\S]*?```/g, "")
+      // Remove blockquotes >
+      .replace(/^>\s+/gm, "")
+      // Remove horizontal rules --- *** ___
+      .replace(/^[-*_]{3,}\s*$/gm, "")
+      // Remove unordered list markers - * +
+      .replace(/^[\s]*[-*+]\s+/gm, "")
+      // Remove ordered list markers 1. 2. etc
+      .replace(/^[\s]*\d+\.\s+/gm, "")
+      // Remove HTML tags
+      .replace(/<[^>]+>/g, "")
+      // Collapse multiple blank lines
+      .replace(/\n{3,}/g, "\n\n")
+      .trim()
+  );
 }
 
 async function extractTextFromPDF(file: File): Promise<string> {
@@ -1131,6 +1166,7 @@ onUnmounted(() => {
   justify-content: center;
   background: var(--rsvp-bg);
   cursor: pointer;
+  transform: scale(1.001);
 
   &.font-sans {
     .word-display {
