@@ -1,6 +1,5 @@
 <template>
   <div class="site-wrapper">
-    <Header />
     <main class="site-content">
       <Scrim />
       <NuxtPage />
@@ -24,6 +23,6 @@ watch(
   () => route.path,
   () => {
     app.setRouteIsTransitioning(true);
-  }
+  },
 );
 </script>
